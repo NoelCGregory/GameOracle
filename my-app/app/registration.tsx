@@ -11,15 +11,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { auth } from "@/FirebaseConfig";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-const loginValidationSchema = yup.object().shape({
+const registrationValidationSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
   email: yup
     .string()
     .email("Please enter a valid email")
@@ -33,7 +29,7 @@ const loginValidationSchema = yup.object().shape({
 export default function Registration() {
   const navigation = useNavigation();
 
-  const handleSignUp = async ({ email, password }) => {
+  const handleSignUp = async ({ name, email, password }) => {
     try {
       // Register the user
       const userCredential = await createUserWithEmailAndPassword(
@@ -42,11 +38,7 @@ export default function Registration() {
         password
       );
       const user = userCredential.user;
-
-      // Update the users profile with their display name (First name Last Name)
-      await updateProfile(user, {
-        displayName: `${"noel"} ${"gregory"}`,
-      });
+      await updateProfile(user, { displayName: name });
     } catch (error: any) {
       console.log(error);
       alert("Registration Failed: " + error.message);
@@ -57,8 +49,8 @@ export default function Registration() {
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <Formik
-        validationSchema={loginValidationSchema}
-        initialValues={{ email: "", password: "" }}
+        validationSchema={registrationValidationSchema}
+        initialValues={{ name: "", email: "", password: "" }}
         onSubmit={handleSignUp}
       >
         {({
@@ -72,14 +64,14 @@ export default function Registration() {
         }) => (
           <>
             <View style={styles.inputContainer}>
-              <Icon name="name" size={25} style={styles.icon} />
+              <Icon name="person" size={25} style={styles.icon} />
               <TextInput
                 style={styles.input}
                 placeholder="Name"
                 autoCapitalize="none"
                 onChangeText={handleChange("name")}
                 onBlur={handleBlur("name")}
-                value={values.email}
+                value={values.name}
               />
             </View>
             <View style={styles.inputContainer}>
@@ -113,16 +105,17 @@ export default function Registration() {
               <Text style={styles.errorText}>{errors.password}</Text>
             )}
 
-            <TouchableOpacity onPress={() => navigation.navigate("login")}>
-              <Text style={styles.forgotPassword}>Login</Text>
-            </TouchableOpacity>
-
             <TouchableOpacity
               style={[styles.button, !isValid && styles.buttonDisabled]}
               onPress={handleSubmit}
               disabled={!isValid}
             >
               <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("login")}>
+              <Text style={styles.signUp}>
+                Have an account? <Text style={styles.signUpLink}>Sign In</Text>
+              </Text>
             </TouchableOpacity>
           </>
         )}

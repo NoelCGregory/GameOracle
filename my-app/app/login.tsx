@@ -11,6 +11,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as yup from "yup";
 
+import { auth } from "@/FirebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 const loginValidationSchema = yup.object().shape({
   email: yup
     .string()
@@ -25,9 +28,20 @@ const loginValidationSchema = yup.object().shape({
 export default function Login() {
   const navigation = useNavigation();
 
-  const handleLogin = (values) => {
-    console.log("Logging in with:", values);
-    // Add authentication logic here
+  const handleSignIn = async ({ email, password }) => {
+    try {
+      console.log(email, password);
+      // Register the user
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+    } catch (error: any) {
+      console.log(error);
+      alert("Registration Failed: " + error.message);
+    }
   };
 
   return (
@@ -36,7 +50,7 @@ export default function Login() {
       <Formik
         validationSchema={loginValidationSchema}
         initialValues={{ email: "", password: "" }}
-        onSubmit={handleLogin}
+        onSubmit={handleSignIn}
       >
         {({
           handleChange,
