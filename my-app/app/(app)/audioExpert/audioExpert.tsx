@@ -1,4 +1,5 @@
 import * as FileSystem from 'expo-file-system';
+import { View, StyleSheet, Button, Alert } from "react-native";
 import axios from 'axios';
 
 // Add your API token here (make sure it's set correctly).
@@ -25,16 +26,18 @@ export const identifyAudio = async (uri: string) => {
       },
     });
 
-    if (response.data.status === 'success') {
+    if (response.data.status === 'success' && response.data.result) {
       const { title, artist, album, label } = response.data.result;
       console.log("Song Identified:", { title, artist, album, label });
       return { title, artist, album, label };
     } else {
-      console.error("Failed to identify song:", response.data);
+      console.warn("No song identified:", response.data);
+      Alert.alert("No Song Identified", "Please try again with a different recording.");
       return null;
     }
   } catch (error) {
     console.error("Error identifying audio:", error);
+    Alert.alert("Error", "Failed to process the audio. Please try again.");
     return null;
   }
 };
