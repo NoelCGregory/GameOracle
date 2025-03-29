@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_TOKEN = "40c0ffd100038df28e5581956648cd75"; // API key
+const API_TOKEN = "fd675d580127c0213cdbf67d0caaa0b7"; // API key
 const AUDD_API_URL = 'https://api.audd.io/upload/';
 
 export const identifyAudio = async (audioUri: string) => {
