@@ -1,31 +1,33 @@
-import axios from "axios";
+import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
 
-const API_TOKEN = "fd675d580127c0213cdbf67d0caaa0b7"; // API key
-const AUDD_API_URL = 'https://api.audd.io/upload/';
+// Add your API token here (make sure it's set correctly).
+const API_TOKEN = 'fd675d580127c0213cdbf67d0caaa0b7'; 
 
-export const identifyAudio = async (audioUri: string) => {
-  if (!audioUri) {
-    console.error("No audio file provided");
-    return null;
-  }
-
+export const identifyAudio = async (uri: string) => {
   try {
-    const formData = new FormData();
-    formData.append("api_token", API_TOKEN);
-    formData.append("file", {
-      uri: audioUri,
-      type: "audio/mpeg", // adjust audio format
-      name: "audio.mp3",
-    } as any);
+    const fileUri = uri; // This is the URI we get from AudioRecorder
+    const fileName = fileUri.split('/').pop(); // Extract file name from URI
+    const fileType = fileUri.split('.').pop(); // Extract file type (extension)
 
-    const response = await axios.post(AUDD_API_URL, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    const formData = new FormData();
+    formData.append('file', {
+      uri: fileUri,
+      name: fileName,
+      type: `audio/${fileType}`,
+    }as any);
+    formData.append('api_token', API_TOKEN);
+
+    // Make sure to send the file via POST in the expected format
+    const response = await axios.post('https://api.audd.io/recognize/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
 
-    // make sure request handled once
-    if (response.data.status === "success") {
+    if (response.data.status === 'success') {
       const { title, artist, album, label } = response.data.result;
-      console.log("Identified song:", { title, artist, album, label });
+      console.log("Song Identified:", { title, artist, album, label });
       return { title, artist, album, label };
     } else {
       console.error("Failed to identify song:", response.data);
