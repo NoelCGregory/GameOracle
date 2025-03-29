@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-nativ
 import { Stack } from "expo-router";
 
 export default function StackLayout() {
-    return(
+    return (
         <Stack>
             <Stack.Screen
                 name="index"
@@ -13,6 +13,7 @@ export default function StackLayout() {
                 name="idhistory"
                 options={{ headerShown: false, animation: "none" }}
             />
+
         </Stack>
     )
 }

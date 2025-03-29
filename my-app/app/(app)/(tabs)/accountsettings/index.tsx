@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/authContext";
-import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 
 export default function AccountSettings() {
