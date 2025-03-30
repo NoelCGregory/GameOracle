@@ -4,7 +4,6 @@ import games from './gameData'; // Import the game data
 import React from 'react';
 import { View, Text } from 'react-native';
 
-// Add your API token here
 const API_TOKEN = 'fd675d580127c0213cdbf67d0caaa0b7';
 
 // Define the type for the games object
@@ -24,7 +23,7 @@ const findMatchingGame = (songTitle: string, artist: string, album: string) => {
 
   for (const game of Object.keys(gameData)) { // Use Object.keys to get valid keys
     let matchCount = 0;
-    const keywords = gameData[game].keywords; // Now TypeScript recognizes this as valid
+    const keywords = gameData[game].keywords; // validate
 
     // Count matches with title, artist, and album
     keywords.forEach(keyword => {
@@ -37,7 +36,7 @@ const findMatchingGame = (songTitle: string, artist: string, album: string) => {
       }
     });
 
-    // Track the best match
+    // Track best match
     if (matchCount > highestMatchCount) {
       highestMatchCount = matchCount;
       bestMatch = game;
@@ -47,13 +46,14 @@ const findMatchingGame = (songTitle: string, artist: string, album: string) => {
   return bestMatch;
 };
 
-// Audio identification function
+// audio identification function
 export const identifyAudio = async (uri: string) => {
   try {
     const fileUri = uri;
     const fileName = fileUri.split('/').pop();
     const fileType = fileUri.split('.').pop();
 
+    // request message for AudD
     const formData = new FormData();
     formData.append('file', {
       uri: fileUri,
@@ -62,32 +62,33 @@ export const identifyAudio = async (uri: string) => {
     } as any);
     formData.append('api_token', API_TOKEN);
 
+    //response message from AudD
     const response = await axios.post('https://api.audd.io/recognize/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
-    if (response.data.status === 'success' && response.data.result) {
+    if (response.data.status === 'success' && response.data.result) { // song identified
       const { title, artist, album } = response.data.result;
       console.log("Song Identified:", { title, artist, album });
 
-      // Find the matching game
+      // find matching game
       const matchingGame = findMatchingGame(title, artist, album);
       
       if (matchingGame) {
-        console.log(`This song is from: ${matchingGame}`);
+        console.log(`This song is from: ${matchingGame}`); // found song and matching game
         return { title, artist, album, matchingGame };
       } else {
         console.log("No matching game found.");
-        return { title, artist, album, matchingGame: null };
+        return { title, artist, album, matchingGame: null }; // found song but no matching game
       }
     } else {
-      console.warn("No song identified:", response.data);
+      console.warn("No song identified:", response.data); // did not find song or game
       return null;
     }
   } catch (error) {
-    console.error("Error identifying audio:", error);
+    console.error("Error identifying audio:", error); // error fetching song
     return null;
   }
 };

@@ -59,7 +59,7 @@ const games = {
     },
     "among us": {
       keywords: [
-        "social", "multiplayer", "teamwork", "deception", "space", "impostor",
+        "social", "multiplayer", "teamwork", "deception", "space", "imposter",
         "strategy", "party", "quick matches", "fun", "killer", "victim", "tasks",
         "colored avatars", "app", "aircraft", "vote", "2018", "among", "us", 
         "among us"
@@ -101,7 +101,7 @@ const games = {
         "platformer", "adventure", "nintendo", "exploration", "collectibles",
         "mario", "creativity", "colorful", "fun", "family friendly", "switch",
         "hat", "eyes", "single player", "worlds", "peach", "odyssey", "super",
-        "2017", "city", "64"
+        "2017", "city", "64", "cappy"
       ]
     },
     "cyberpunk 2077": {
