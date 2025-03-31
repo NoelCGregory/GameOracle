@@ -1,4 +1,5 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -6,6 +7,8 @@ export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
+
+  const [isSubmitVisible, setIsSubmitVisible] = useState(false);
 
   useEffect(() => {
     console.log("tet");
@@ -38,6 +41,7 @@ export default function Camera() {
     try {
       const photo = await cameraRef.current.takePictureAsync();
       console.log(photo);
+      setIsSubmitVisible(true);
     } catch (error) {
       console.error("Error", "Failed to take picture.");
     }
@@ -51,10 +55,13 @@ export default function Camera() {
             <Text style={styles.text}>Take Pic</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Take Pic</Text>
+            <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
         </View>
       </CameraView>
+      {(isSubmitVisible &&
+        <Button title="Submit for Identification" onPress={() => router.navigate("/idsuccess")}/>
+      )}
     </View>
   );
 }
