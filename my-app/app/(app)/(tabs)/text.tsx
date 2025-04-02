@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Keyboard } from "react-native";
 import games from "../audioExpert/gameData"; // Ensure you have the games list in a separate file like games.js or games.ts
 
 function findMatchingGame(userInput: string): string {
@@ -29,21 +29,21 @@ export default function GameMatcher() {
     };
     
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={styles.container}>
-                <Text style={styles.title}>Game Matcher</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Describe a game..."
-                    onChangeText={setInput}
-                    value={input}
-                    multiline
-                />
-                <TouchableOpacity style={styles.button} onPress={handleMatch}>
-                    <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
-            </View>
-        </TouchableWithoutFeedback>
+        <View style={styles.container}>
+            <Text style={styles.title}>Describe a Game:</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={setInput}
+                value={input}
+                multiline
+                returnKeyType="done"
+                blurOnSubmit={true}
+                onSubmitEditing={Keyboard.dismiss}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleMatch}>
+                <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+        </View>
     );
 }
 
