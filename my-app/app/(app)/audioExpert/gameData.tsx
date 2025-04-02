@@ -137,7 +137,7 @@ const games = {
         "mario", "karting", "multiplayer", "cars", "peach", "banana", "blue shell",
         "shell", "wii", "nintendo", "switch", "toad", "wii u", "ds", "yoshi",
         "mystery", "item", "customize", "star", "movie", "super", "1992",
-        "kart"
+        "kart", "gran prix", "tracks", "karts", "hat", "moustache"
       ]
     },
     "the last of us": {
