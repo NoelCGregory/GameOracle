@@ -30,14 +30,6 @@ export default function TabLayout() {
         }}
       /> */}
       <Tabs.Screen
-        name="audio"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="accountsettings"
         options={{
           tabBarIcon: ({ color }) => (

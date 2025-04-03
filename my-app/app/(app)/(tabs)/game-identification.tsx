@@ -9,7 +9,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ImageExpert from '../../image-expert';
-import Camera from '@/app/(app)/(tabs)/camera';
+import Camera from '@/app/(app)/components/camera';
+import AudioRecorder from '@/app/(app)/components/audio';
+import { identifyAudio } from '@/app/(app)/audioExpert/audioExpert';
 // Import other experts when they're created
 // import TextExpert from './text-expert';
 // import AudioExpert from './audio-expert';
@@ -19,6 +21,84 @@ interface Results {
   text: string | null;
   audio: string | null;
 }
+
+// Audio expert wrapper component
+const AudioExpert = ({ onResultReceived }: { onResultReceived: (result: { type: keyof Results; data: string }) => void }) => {
+  const [audioUri, setAudioUri] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  
+  // Update this function to receive audio URI from AudioRecorder
+  const handleAudioCaptured = (uri: string) => {
+    console.log("AudioExpert received URI:", uri);
+    setAudioUri(uri);
+  };
+  
+  const analyzeAudio = async () => {
+    if (!audioUri) {
+      console.log("No audio URI available for analysis");
+      return;
+    }
+    
+    setAnalyzing(true);
+    console.log("Starting audio analysis with URI:", audioUri);
+    
+    try {
+      const result = await identifyAudio(audioUri);
+      console.log("Audio analysis result:", result);
+      
+      if (result && result.matchingGame) {
+        onResultReceived({
+          type: 'audio',
+          data: `Identified song: "${result.title}" by ${result.artist} from the album "${result.album}". This song is from the game: ${result.matchingGame}`
+        });
+      } else if (result) {
+        onResultReceived({
+          type: 'audio',
+          data: `Identified song: "${result.title}" by ${result.artist} from the album "${result.album}". We couldn't match this song to a specific game.`
+        });
+      } else {
+        onResultReceived({
+          type: 'audio',
+          data: "We couldn't identify this audio sample. Please try again with a clearer recording."
+        });
+      }
+    } catch (error) {
+      console.error("Error analyzing audio:", error);
+      onResultReceived({
+        type: 'audio',
+        data: "Error analyzing audio. Please try again."
+      });
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+  
+  return (
+    <View style={styles.audioExpertContainer}>
+      <Text style={styles.audioExpertTitle}>Audio Expert</Text>
+      <Text style={styles.audioExpertSubtitle}>Record game audio to identify:</Text>
+      
+      {/* Pass the onAudioCaptured callback to AudioRecorder */}
+      <AudioRecorder onAudioCaptured={handleAudioCaptured} />
+      
+      <TouchableOpacity
+        style={[styles.analyzeButton, !audioUri && styles.buttonDisabled]}
+        onPress={analyzeAudio}
+        disabled={!audioUri || analyzing}
+      >
+        <Text style={styles.analyzeButtonText}>
+          {analyzing ? 'Analyzing...' : 'Analyze Audio'}
+        </Text>
+      </TouchableOpacity>
+      
+      <Text style={styles.audioInstructionsText}>
+        1. Click "Start Recording" to record game audio
+        2. Click "Stop Recording" when done
+        3. Click "Analyze Audio" to identify the game
+      </Text>
+    </View>
+  );
+};
 
 export default function GameIdentification() {
   const navigation = useNavigation();
@@ -164,8 +244,8 @@ export default function GameIdentification() {
             )}
             
             {activeTab === 'audio' && (
-              <View style={styles.placeholderContainer}>
-                <Text style={styles.placeholderText}>Audio Expert Coming Soon</Text>
+              <View style={styles.audioSection}>
+                <AudioExpert onResultReceived={handleExpertResult} />
               </View>
             )}
           </View>
@@ -325,6 +405,9 @@ const styles = StyleSheet.create({
   imageSection: {
     marginBottom: 20,
   },
+  audioSection: {
+    marginBottom: 20,
+  },
   analyzeButton: {
     backgroundColor: '#1E90FF',
     borderRadius: 12,
@@ -381,4 +464,30 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  // Audio expert styles
+  audioExpertContainer: {
+    padding: 15,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 12,
+  },
+  audioExpertTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 5,
+    color: '#333',
+  },
+  audioExpertSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 15,
+  },
+  audioInstructionsText: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 15,
+    lineHeight: 18,
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
+  }
 }); 

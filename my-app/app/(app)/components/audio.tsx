@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Button, Alert } from "react-native";
 import { Audio } from "expo-av";
 import { Svg, Polyline } from "react-native-svg";
-import { identifyAudio } from "../audioExpert/audioExpert";
+import { identifyAudio } from "@/app/(app)/audioExpert/audioExpert";
 
 export default function AudioRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
