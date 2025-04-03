@@ -37,6 +37,14 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="accountsettings"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="gear" color={color} />
+          )
+        }}
+      />
     </Tabs>
   );
 }

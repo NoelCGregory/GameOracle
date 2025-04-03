@@ -1,4 +1,5 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 
@@ -12,6 +13,8 @@ export default function Camera({ onCapture }: CameraProps) {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+
+  const [isSubmitVisible, setIsSubmitVisible] = useState(false);
 
   useEffect(() => {
     const getPermission = async () => {
@@ -90,6 +93,7 @@ export default function Camera({ onCapture }: CameraProps) {
 
   return (
     <View style={styles.container}>
+      
       {!capturedImage ? (
         <CameraView style={styles.camera} ref={cameraRef} facing={facing}>
           <View style={styles.buttonContainer}>
@@ -108,6 +112,7 @@ export default function Camera({ onCapture }: CameraProps) {
             <Text style={styles.retakeText}>Take Again</Text>
           </TouchableOpacity>
         </View>
+
       )}
     </View>
   );

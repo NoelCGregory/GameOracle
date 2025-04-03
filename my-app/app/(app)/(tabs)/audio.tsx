@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Button, Alert } from "react-native";
 import { Audio } from "expo-av";
 import { Svg, Polyline } from "react-native-svg";
+import { identifyAudio } from "../audioExpert/audioExpert";
 
 export default function AudioRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
@@ -78,6 +79,17 @@ export default function AudioRecorder() {
     }
   };
 
+  //button to submit currently recorded audio
+  const submitAudio = async () => {
+    if (!audioUri) {
+      Alert.alert("No Recording", "Record an audio first!");
+      return;
+    }
+
+    console.log("Submitting audio for identification:", audioUri);
+    await identifyAudio(audioUri);
+  };
+
   return (
     <View style={styles.container}>
       <Svg
@@ -99,6 +111,7 @@ export default function AudioRecorder() {
         onPress={recording ? stopRecording : startRecording}
       />
       <Button title="Play Audio" onPress={playAudio} disabled={!audioUri} />
+      <Button title="Submit" onPress={submitAudio} disabled={!audioUri} />
     </View>
   );
 }
