@@ -13,7 +13,7 @@ import Camera from '@/app/(app)/components/camera';
 import AudioRecorder from '@/app/(app)/components/audio';
 import { identifyAudio } from '@/app/(app)/audioExpert/audioExpert';
 // Import other experts when they're created
-// import TextExpert from './text-expert';
+// import TextExpert from '@/app/(app)/textExpert/text';
 // import AudioExpert from './audio-expert';
 
 interface Results {
