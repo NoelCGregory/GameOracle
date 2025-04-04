@@ -13,21 +13,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="game-identification"
+        options={{
+          title: "Game ID",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="camera" color={color} />
+          ),
+        }}
+      />
+      {/* <Tabs.Screen
         name="camera"
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="home" color={color} />
           ),
         }}
-      />
-      <Tabs.Screen
-        name="audio"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
-        }}
-      />
+      /> */}
       <Tabs.Screen
         name="accountsettings"
         options={{

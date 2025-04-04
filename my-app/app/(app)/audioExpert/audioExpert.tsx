@@ -13,6 +13,26 @@ type GameDatabase = {
   };
 };
 
+// Define API response type
+interface AuddResponse {
+  status: string;
+  result?: {
+    title: string;
+    artist: string;
+    album: string;
+    [key: string]: any;
+  };
+  [key: string]: any;
+}
+
+// Return type for identifyAudio
+interface AudioIdentificationResult {
+  title: string;
+  artist: string;
+  album: string;
+  matchingGame: string | null;
+}
+
 // Ensure games has the correct type
 const gameData: GameDatabase = games;
 
@@ -47,11 +67,13 @@ const findMatchingGame = (songTitle: string, artist: string, album: string) => {
 };
 
 // audio identification function
-export const identifyAudio = async (uri: string) => {
+export const identifyAudio = async (uri: string): Promise<AudioIdentificationResult | null> => {
   try {
     const fileUri = uri;
-    const fileName = fileUri.split('/').pop();
-    const fileType = fileUri.split('.').pop();
+    const fileName = fileUri.split('/').pop() || 'audio.m4a';
+    const fileType = fileUri.split('.').pop() || 'm4a';
+
+    console.log(`Preparing to identify: ${fileName} (${fileType})`);
 
     // request message for AudD
     const formData = new FormData();
@@ -62,12 +84,16 @@ export const identifyAudio = async (uri: string) => {
     } as any);
     formData.append('api_token', API_TOKEN);
 
+    console.log("Sending request to AudD API...");
+
     //response message from AudD
-    const response = await axios.post('https://api.audd.io/recognize/', formData, {
+    const response = await axios.post<AuddResponse>('https://api.audd.io/recognize/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
+
+    console.log("Received response from AudD API");
 
     if (response.data.status === 'success' && response.data.result) { // song identified
       const { title, artist, album } = response.data.result;

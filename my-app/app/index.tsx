@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import GameIdentification from './(app)/(tabs)/game-identification';
 
 export default function SplashScreen() {
   return (
