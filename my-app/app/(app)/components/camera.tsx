@@ -1,14 +1,24 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 
 interface CameraProps {
   onCapture: (uri: string) => void;
 }
 
 export default function Camera({ onCapture }: CameraProps) {
-  console.log("Camera component rendered with onCapture type:", typeof onCapture);
+  console.log(
+    "Camera component rendered with onCapture type:",
+    typeof onCapture
+  );
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
@@ -28,14 +38,17 @@ export default function Camera({ onCapture }: CameraProps) {
         console.error("Error requesting camera permission:", error);
       }
     };
-    
+
     getPermission();
   }, []);
 
   useEffect(() => {
     console.log("Camera component mounted with onCapture:", typeof onCapture);
-    if (typeof onCapture !== 'function') {
-      console.error("Camera component received invalid onCapture prop:", onCapture);
+    if (typeof onCapture !== "function") {
+      console.error(
+        "Camera component received invalid onCapture prop:",
+        onCapture
+      );
     }
   }, [onCapture]);
 
@@ -66,12 +79,12 @@ export default function Camera({ onCapture }: CameraProps) {
       console.log("Taking picture");
       const photo = await cameraRef.current.takePictureAsync();
       console.log(photo);
-      
+
       let imageUri: string | null = null;
-      
-      if (photo.uri && photo.uri.startsWith('file://')) {
+
+      if (photo.uri && photo.uri.startsWith("file://")) {
         imageUri = photo.uri;
-      } else if (photo.uri && photo.uri.startsWith('data:')) {
+      } else if (photo.uri && photo.uri.startsWith("data:")) {
         imageUri = photo.uri;
       } else if (photo.base64) {
         imageUri = `data:image/jpeg;base64,${photo.base64}`;
@@ -79,7 +92,8 @@ export default function Camera({ onCapture }: CameraProps) {
         console.error("Unexpected photo format:", photo);
         return;
       }
-
+      console.log("=============================");
+      console.log(imageUri);
       setCapturedImage(imageUri);
       onCapture(imageUri);
     } catch (error) {
@@ -93,14 +107,16 @@ export default function Camera({ onCapture }: CameraProps) {
 
   return (
     <View style={styles.container}>
-      
       {!capturedImage ? (
         <CameraView style={styles.camera} ref={cameraRef} facing={facing}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={takePicture}>
               <Text style={styles.text}>Take Pic</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={toggleCameraFacing}
+            >
               <Text style={styles.text}>Toggle Camera</Text>
             </TouchableOpacity>
           </View>
@@ -112,7 +128,6 @@ export default function Camera({ onCapture }: CameraProps) {
             <Text style={styles.retakeText}>Take Again</Text>
           </TouchableOpacity>
         </View>
-
       )}
     </View>
   );
@@ -121,9 +136,9 @@ export default function Camera({ onCapture }: CameraProps) {
 const styles = StyleSheet.create({
   container: {
     height: 400,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
     borderRadius: 15,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginHorizontal: 10,
     marginVertical: 10,
   },
@@ -146,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: "rgba(255,255,255,0.2)",
     marginHorizontal: 5,
   },
   text: {
@@ -156,25 +171,25 @@ const styles = StyleSheet.create({
   },
   captureContainer: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   capturedImage: {
     flex: 1,
     borderRadius: 15,
   },
   retakeButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: 20,
     right: 20,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: "rgba(0,0,0,0.6)",
     padding: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   retakeText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });

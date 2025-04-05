@@ -1,63 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Keyboard,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useNavigation } from "@react-navigation/native";
-import { Formik } from "formik";
-import * as yup from "yup";
+import games from "../audioExpert/gameData"; // Ensure you have the games list in a separate file like games.js or games.ts
 
-import { auth } from "@/FirebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+function findMatchingGame(userInput: string): string {
+  const inputWords = userInput.toLowerCase().split(/\s+/);
+  let bestMatch: string | null = null;
+  let highestMatchCount = 0;
 
-const formValidationSchema = yup.object().shape({
-  q1: yup.string().required("Please enter a Genre"),
-  q2: yup.string().required("Please enter character information"),
-  q3: yup.string().required("Please enter the theme"),
-  q4: yup.string().required("Please enter if the game is multiplayer or sol"),
-});
+  for (const [game, data] of Object.entries(games)) {
+    const keywords = new Set(data.keywords.map((k) => k.toLowerCase()));
+    let matchCount = inputWords.filter((word) => keywords.has(word)).length;
 
-export default function textInput() {
-  const navigation = useNavigation();
+    if (matchCount > highestMatchCount) {
+      highestMatchCount = matchCount;
+      bestMatch = game;
+    }
+  }
+
+  return bestMatch || "No matching game found";
+}
+
+export default function TextInputer({ onCapture }: any) {
+  const [input, setInput] = useState("");
+
+  const handleMatch = () => {
+    console.log(input);
+    onCapture(input);
+    const match = findMatchingGame(input);
+    console.log("Match Found:", match);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <Formik
-        validationSchema={formValidationSchema}
-        initialValues={{ q1: "", q2: "", q3: "", q4: "" }}
-      >
-        {({ handleChange, handleBlur, values, errors, touched }) => (
-          <>
-            <View style={styles.inputContainer}>
-              <Icon name="mail-outline" size={25} style={styles.icon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.q1}
-              />
-              <Icon name="mail-outline" size={25} style={styles.icon} />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.q1}
-              />
-            </View>
-          </>
-        )}
-      </Formik>
+      <Text style={styles.title}>Describe a Game:</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setInput}
+        value={input}
+        multiline
+        returnKeyType="done"
+        blurOnSubmit={true}
+        onSubmitEditing={Keyboard.dismiss}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleMatch}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -67,62 +61,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: 20,
     backgroundColor: "#fff",
-    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 32,
-    marginBottom: 40,
+    fontSize: 24,
     fontWeight: "bold",
-    color: "black",
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 8,
-    paddingHorizontal: 10,
     marginBottom: 20,
-  },
-  icon: {
-    marginRight: 10,
   },
   input: {
-    flex: 1,
-    height: "100%",
-  },
-  forgotPassword: {
-    alignSelf: "flex-end",
+    width: "80%",
+    height: 100,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
     marginBottom: 20,
-    color: "#000",
+    textAlignVertical: "top",
   },
   button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#1E90FF",
+    backgroundColor: "#007bff",
+    padding: 10,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: "#A9A9A9",
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 18,
-  },
-  signUp: {
-    color: "#000",
-  },
-  signUpLink: {
-    color: "#1E90FF",
-  },
-  errorText: {
-    color: "red",
-    alignSelf: "flex-start",
-    marginBottom: 10,
+    color: "white",
+    fontSize: 16,
   },
 });

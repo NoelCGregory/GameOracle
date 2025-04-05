@@ -7,34 +7,29 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerTitle: "Home",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="home" color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="game-identification"
+        name="identify"
         options={{
-          title: "Game ID",
+          headerTitle: "Game Identifiy",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="camera" color={color} />
+            <FontAwesome size={28} name="gear" color={color} />
           ),
         }}
       />
-      {/* <Tabs.Screen
-        name="camera"
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
-        }}
-      /> */}
       <Tabs.Screen
         name="accountsettings"
         options={{
+          headerTitle: "Account Setting",
+
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="gear" color={color} />
-          )
+          ),
         }}
       />
     </Tabs>

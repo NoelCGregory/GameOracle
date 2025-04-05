@@ -4,7 +4,7 @@ import { Audio } from "expo-av";
 import { Svg, Polyline } from "react-native-svg";
 import { identifyAudio } from "@/app/(app)/audioExpert/audioExpert";
 
-export default function AudioRecorder() {
+export default function AudioRecorder({ onCapture }: any) {
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [audioUri, setAudioUri] = useState<string | null>(null);
@@ -56,6 +56,7 @@ export default function AudioRecorder() {
         const uri = recording.getURI();
         setAudioUri(uri);
         setRecording(null);
+        onCapture(uri);
 
         Alert.alert("Recording Saved", `File saved at: ${uri}`);
       }
@@ -79,17 +80,6 @@ export default function AudioRecorder() {
     }
   };
 
-  //button to submit currently recorded audio
-  const submitAudio = async () => {
-    if (!audioUri) {
-      Alert.alert("No Recording", "Record an audio first!");
-      return;
-    }
-
-    console.log("Submitting audio for identification:", audioUri);
-    await identifyAudio(audioUri);
-  };
-
   return (
     <View style={styles.container}>
       <Svg
@@ -111,7 +101,6 @@ export default function AudioRecorder() {
         onPress={recording ? stopRecording : startRecording}
       />
       <Button title="Play Audio" onPress={playAudio} disabled={!audioUri} />
-      <Button title="Submit" onPress={submitAudio} disabled={!audioUri} />
     </View>
   );
 }
