@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator, StyleSheet, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { useRouter } from "expo-router";
+// Import your IGDB API function once you set it up
+import { getGameRecommendations } from "../../services/API/igdbApi";
 
 interface Game {
   id: number;
   name: string;
-  // Add other properties like cover URL if needed
+  // add additional fields such as cover image URL if needed
 }
 
 const Recommendations: React.FC = () => {
@@ -20,8 +29,8 @@ const Recommendations: React.FC = () => {
 
   const fetchRecommendations = async () => {
     try {
-      // Call your API function to get recommendations (see later steps for API integration)
-      const recommendations = await getGameRecommendations();
+      const identifiedGameName = "Super Mario Bros";
+      const recommendations = await getGameRecommendations(identifiedGameName);
       setGames(recommendations);
     } catch (err) {
       setError("Failed to fetch recommendations.");
