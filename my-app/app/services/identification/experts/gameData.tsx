@@ -1,5 +1,5 @@
 const games = {
-  "the legend of zelda: breath of the wild": {
+  "The Legend of Zelda: Breath of the Wild": {
     keywords: [
       "open world", "adventure", "exploration", "puzzles", "action",
       "fantasy", "shrines", "weapons", "crafting", "nintendo", "zelda",
@@ -9,7 +9,7 @@ const games = {
       "champions", "sheikah slate", "trial of the sword"
     ]
   },
-  "minecraft": {
+  "Minecraft": {
     keywords: [
       "sandbox", "crafting", "building", "survival", "creativity", "blocks",
       "exploration", "multiplayer", "mods", "open world", "creeper", "java",
@@ -19,7 +19,7 @@ const games = {
       "minecart", "enchantment", "elytra", "stronghold", "beacon"
     ]
   },
-  "wii sports": {
+  "Wii Sports": {
     keywords: [
       "bowling", "tennis", "wii", "sports", "boxing", "golf", "baseball",
       "mii", "nintendo", "2006", "remote", "multiplayer", "nunchuk",
@@ -28,7 +28,7 @@ const games = {
       "stamina", "training mode", "champs", "gold medal"
     ]
   },
-  "fortnite": {
+  "Fortnite": {
     keywords: [
       "battle royale", "shooter", "building", "multiplayer", "cartoony",
       "competitive", "skins", "cross platform", "live events", "free to play",
@@ -37,7 +37,7 @@ const games = {
       "battle pass", "dances", "battle bus", "bus", "challenges", "default dance"
     ]
   },
-  "the witcher 3: wild hunt": {
+  "The Witcher 3: Wild Hunt": {
     keywords: [
       "open world", "rpg", "story", "fantasy", "choices", "monsters",
       "quests", "characters", "mature", "geralt", "white hair", "past",
@@ -46,7 +46,7 @@ const games = {
       "cd projekt red", "triss", "yennefer", "griffin", "wild hunt", "gwent"
     ]
   },
-  "animal crossing: new horizons": {
+  "Animal Crossing: New Horizons": {
     keywords: [
       "life", "simulation", "relaxing", "customization", "villagers", "fishing",
       "decorating", "island", "multiplayer", "chill", "nintendo", "bubblegum",
@@ -55,7 +55,7 @@ const games = {
       "KK Slider", "museum", "Brewster", "bells", "terraforming"
     ]
   },
-  "call of duty: warzone": {
+  "Call of Duty: Warzone": {
     keywords: [
       "battle royale", "fps", "shooter", "multiplayer", "competitive",
       "modern warfare", "guns", "cross-platform", "teamwork", "fast", "paced",
@@ -63,7 +63,7 @@ const games = {
       "vehicles", "gulag", "operators", "snipers", "warzone", "perks"
     ]
   },
-  "stardew valley": {
+  "Stardew Valley": {
     keywords: [
       "farming", "simulation", "relaxing", "crafting", "relationships",
       "exploration", "pixel art", "indie", "co-op", "chill", "star", "pc",
@@ -72,7 +72,7 @@ const games = {
       "cooking", "greenhouse", "joja", "mart", "community center"
     ]
   },
-  "among us": {
+  "Among Us": {
     keywords: [
       "social", "multiplayer", "teamwork", "deception", "space", "imposter",
       "strategy", "party", "quick matches", "fun", "killer", "victim",
@@ -81,7 +81,7 @@ const games = {
       "eject", "map", "spaceship"
     ]
   },
-  "grand theft auto v": {
+  "Grand Theft Auto V": {
     keywords: [
       "open world", "action", "crime", "sandbox", "story-driven",
       "multiplayer", "cars", "heists", "mature", "gta online", "rob", "2013",
@@ -90,7 +90,7 @@ const games = {
       "bank", "stock market"
     ]
   },
-  "plants vs. zombies": {
+  "Plants vs. Zombies": {
     keywords: [
       "plants", "zombies", "sun", "flower", "dave", "crazy", "strategy",
       "garden", "lawnmower", "horde", "waves", "shooting", "app",
@@ -98,7 +98,7 @@ const games = {
       "cherry bomb", "defense", "tower defense", "brains"
     ]
   },
-  "job simulator": {
+  "Job Simulator": {
     keywords: [
       "computers", "vr", "htc", "vive", "psvr", "single player", "job", "desk",
       "convenience store", "humor", "gloves", "chef", "cartridge", "innovative",
@@ -106,7 +106,7 @@ const games = {
       "owlchemy labs", "2016", "simulator"
     ]
   },
-  "clash of clans": {
+  "Clash of Clans": {
     keywords: [
       "clash", "clans", "goblins", "loot", "elixir", "gold", "multiplayer",
       "free", "ranked", "townhall", "app", "supercell", "dark elixir",
@@ -115,7 +115,7 @@ const games = {
       "2012"
     ]
   },
-  "super mario odyssey": {
+  "Super Mario Odyssey": {
     keywords: [
       "platformer", "adventure", "nintendo", "exploration", "collectibles",
       "mario", "creativity", "colorful", "fun", "family friendly", "switch",
@@ -123,21 +123,21 @@ const games = {
       "2017", "city", "64", "cappy"
     ]
   },
-  "cyberpunk 2077": {
+  "Cyberpunk 2077": {
     keywords: [
       "open world", "rpg", "futuristic", "story-driven", "choices", "cyberpunk",
       "mature", "characters", "first-person", "keanu reeves", "ps5", "robot",
       "gun", "night city", "future", "megalopolis", "power", "2020", "2077"
     ]
   },
-  "rocket league": {
+  "Rocket League": {
     keywords: [
       "sports", "cars", "soccer", "competitive", "multiplayer", "fast-paced",
       "team", "cross-platform", "fun", "physics", "football", "ps", "online",
       "2015", "rocket", "league"
     ]
   },
-  "elden ring": {
+  "Elden Ring": {
     keywords: [
       "open world", "action rpg", "difficult", "boss fights", "dark fantasy",
       "exploration", "lore", "challenging", "fromsoftware", "george r.r. martin",
@@ -146,14 +146,14 @@ const games = {
       "maidenless", "tarnished"
     ]
   },
-  "overwatch": {
+  "Overwatch": {
     keywords: [
       "fps", "hero shooter", "multiplayer", "teamwork", "competitive",
       "characters", "abilities", "esports", "fast-paced", "blizzard", "2016",
       "overwatch"
     ]
   },
-  "mario kart": {
+  "Mario Kart": {
     keywords: [
       "mario", "karting", "multiplayer", "cars", "peach", "banana", "blue shell",
       "shell", "wii", "nintendo", "switch", "toad", "wii u", "ds", "yoshi",
@@ -161,7 +161,7 @@ const games = {
       "tracks", "speed boost", "rainbow", "road", "racing", "drifting", "mushroom"
     ]
   },
-  "the last of us": {
+  "The Last of Us": {
     keywords: [
       "open world", "post-apocalyptic", "story-driven", "parent", "survival",
       "realistic", "award-winning", "mature", "exploration", "naughty dog",
