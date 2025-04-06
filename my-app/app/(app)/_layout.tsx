@@ -3,6 +3,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuth } from "../../context/authContext";
+import IdentificationResult from "./identifcationResult";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();

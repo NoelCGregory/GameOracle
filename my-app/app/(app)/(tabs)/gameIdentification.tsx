@@ -7,43 +7,52 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import Camera from "@/app/(app)/components/camera";
 import AudioRecorder from "@/app/(app)/components/audio";
-import { identifyAudio } from "@/app/(app)/audioExpert/audioExpert";
-import TextExpert from "@/app/(app)/textExpert/text";
-import TextInput from "../components/text";
 import TextInputer from "../components/text";
-import { processImageWithGemini } from "@/app/services/geminiService";
-import ImageExpert from "@/app/services/identification/experts/imageExpert";
+import { IdentificationManager } from "@/app/services/identification/identificationManager";
+import { Redirect, useRouter } from "expo-router";
+import { Timestamp, addDoc, collection } from "firebase/firestore";
+import { db } from "@/FirebaseConfig";
+import { useAuth } from "@/context/authContext";
+import Toast from "react-native-toast-message";
 
 interface IdentificationRecord {
-  imageUri: string | null;
-  audioUri: string | null;
-  textData: string | null;
+  image: string | null;
+  audio: string | null;
+  text: string | null;
 }
 
 export default function GameIdentification() {
-  const navigation = useNavigation();
+  const state = useNavigationState((state) => state);
+  const router = useRouter();
+  const { user } = useAuth();
+
   const [activeTab, setActiveTab] = useState("image");
-  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [manager] = useState(new IdentificationManager());
+
   const [identificationRecord, setIdentificationRecord] =
     useState<IdentificationRecord>({
-      imageUri: null,
-      audioUri: null,
-      textData: null,
+      image: null,
+      audio: null,
+      text: null,
     });
-  const [finalResult, setFinalResult] = useState<string | null>(null);
+
+  useEffect(() => {
+    manager.initializeExperts();
+  }, []);
 
   const handleCameraCapture = async (uri: string) => {
     if (uri) {
-      let t: ImageExpert = new ImageExpert();
-      console.log(await t.getResult(uri));
-      setIdentificationRecord((prev) => ({
-        ...prev,
-        imageUri: uri,
-      }));
-      setShowAnalysis(false);
+      console.log("exist", uri);
+
+      const updatedRecord = {
+        ...identificationRecord,
+        image: uri,
+      };
+
+      setIdentificationRecord(updatedRecord);
       console.log("Data----------");
       console.log(identificationRecord);
     } else {
@@ -55,11 +64,10 @@ export default function GameIdentification() {
     if (uri) {
       setIdentificationRecord((prev) => ({
         ...prev,
-        audioUri: uri,
+        audio: uri,
       }));
-      setShowAnalysis(false);
       console.log("Data----------");
-      console.log(identifyAudio(uri));
+      // console.log(identifyAudio(uri));
       console.log(identificationRecord);
     } else {
       console.error("No URI provided to handleAudioCapture");
@@ -70,9 +78,8 @@ export default function GameIdentification() {
     if (uri) {
       setIdentificationRecord((prev) => ({
         ...prev,
-        textData: uri,
+        text: uri,
       }));
-      setShowAnalysis(false);
       console.log("Data----------");
       console.log(identificationRecord);
     } else {
@@ -80,22 +87,28 @@ export default function GameIdentification() {
     }
   };
 
-  const aggregateResults = () => {
-    const hasResults = Object.values(identificationRecord).some(
-      (result) => result !== null
-    );
-    if (!hasResults) {
-      alert("Please analyze at least one input type before submitting");
-      return;
+  const aggregateResults = async () => {
+    console.log(manager);
+    try {
+      const result = await manager.submitIdentification(identificationRecord);
+      if (result == null) throw DOMException("Error");
+      const docRef = await addDoc(collection(db, "identificationHistories"), {
+        game: result,
+        user: user?.uid,
+        timestamp: Timestamp.now(),
+      });
+      router.push({
+        pathname: "/screens/gameDetail",
+        params: {
+          gameName: result,
+        },
+      });
+    } catch (e) {
+      Toast.show({
+        type: "error", // 'success' | 'error' | 'info'
+        text1: "Error",
+      });
     }
-    let aggregatedResult = "";
-    if (identificationRecord.imageUri)
-      aggregatedResult += `Image Analysis: ${identificationRecord.imageUri}\n\n`;
-    if (identificationRecord.textData)
-      aggregatedResult += `Text Analysis: ${identificationRecord.textData}\n\n`;
-    if (identificationRecord.audioUri)
-      aggregatedResult += `Audio Analysis: ${identificationRecord.audioUri}\n\n`;
-    setFinalResult(aggregatedResult);
   };
 
   return (
@@ -161,12 +174,6 @@ export default function GameIdentification() {
               </View>
             )}
           </View>
-          {finalResult && (
-            <View style={styles.resultSection}>
-              <Text style={styles.resultSectionTitle}>Results</Text>
-              <Text style={styles.resultText}>{finalResult}</Text>
-            </View>
-          )}
         </ScrollView>
         <View style={styles.submitButtonContainer}>
           <TouchableOpacity
@@ -179,6 +186,7 @@ export default function GameIdentification() {
           </TouchableOpacity>
         </View>
       </View>
+      <Toast />
     </SafeAreaView>
   );
 }

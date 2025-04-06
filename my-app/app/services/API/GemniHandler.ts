@@ -65,10 +65,36 @@ export default class GemniHandler implements APIHandler {
 
       // Create a prompt for game identification
       const prompt =
-        "This is a screenshot from a video game. Please identify the game, including the title, genre, developer, release year, and any distinctive features visible in the screenshot. If you're not certain, provide your best guess and explain your reasoning.Export the information as a json";
+        "This is a screenshot from a video game. Please identify the game name in the screenshot. If you're not certain, provide your best guess and only return just the name of game nothing else.";
 
       // Generate content with the image
       const result = await model.generateContent([prompt, imageData]);
+      const response = await result.response;
+      let text = response.text();
+      if (text.length > 50) {
+        text = "";
+      }
+
+      return text;
+    } catch (error) {
+      console.error("Error processing image with Gemini:", error);
+      throw new Error("Failed to analyze image with AI");
+    }
+  };
+
+  requestGameDetails = async (gameName: string): Promise<string> => {
+    try {
+      // Convert the image to base64 (required by Gemini API)
+
+      // For Android camera captures, we'll always use JPEG
+
+      // Initialize the Gemini model
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+      const prompt = `The game name is ${gameName} give me back description of the game,developer,release date and genre. Return this data as a json format.`;
+
+      // Generate content with the image
+      const result = await model.generateContent([prompt]);
       const response = await result.response;
       const text = response.text();
       console.log(text);

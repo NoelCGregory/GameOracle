@@ -7,25 +7,6 @@ import {
   StyleSheet,
   Keyboard,
 } from "react-native";
-import games from "../audioExpert/gameData"; // Ensure you have the games list in a separate file like games.js or games.ts
-
-function findMatchingGame(userInput: string): string {
-  const inputWords = userInput.toLowerCase().split(/\s+/);
-  let bestMatch: string | null = null;
-  let highestMatchCount = 0;
-
-  for (const [game, data] of Object.entries(games)) {
-    const keywords = new Set(data.keywords.map((k) => k.toLowerCase()));
-    let matchCount = inputWords.filter((word) => keywords.has(word)).length;
-
-    if (matchCount > highestMatchCount) {
-      highestMatchCount = matchCount;
-      bestMatch = game;
-    }
-  }
-
-  return bestMatch || "No matching game found";
-}
 
 export default function TextInputer({ onCapture }: any) {
   const [input, setInput] = useState("");
@@ -33,8 +14,6 @@ export default function TextInputer({ onCapture }: any) {
   const handleMatch = () => {
     console.log(input);
     onCapture(input);
-    const match = findMatchingGame(input);
-    console.log("Match Found:", match);
   };
 
   return (
