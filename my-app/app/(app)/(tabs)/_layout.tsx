@@ -23,20 +23,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="accountsettings"
-        options={{
-          headerTitle: "Account Settings",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="gear" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="recommendations" // This should match the file name (without extension)
         options={{
           headerTitle: "Game Recommendations",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="list" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="accountsettings"
+        options={{
+          headerTitle: "Account Settings",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="gear" color={color} />
           ),
         }}
       />

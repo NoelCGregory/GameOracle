@@ -6,18 +6,28 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import GemniHandler from "@/app/services/API/GemniHandler";
+import { getGameRecommendations } from "../../services/API/igdbApi";
 
 export default function GameDetail() {
   const router = useRouter();
   const [gameData, setGameData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { gameName } = useLocalSearchParams();
+  //const { gameName } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const gameName: string = Array.isArray(params.gameName)
+    ? params.gameName[0]
+    : params.gameName || "";
   const insets = useSafeAreaInsets();
+
+  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [loadingRecs, setLoadingRecs] = useState(true);
+  const [errorRecs, setErrorRecs] = useState<string | null>(null);
 
   const goBack = () => {
     router.back();
@@ -48,6 +58,22 @@ export default function GameDetail() {
     return () => {
       isMounted = false;
     };
+  }, [gameName]);
+
+  // New useEffect to fetch similar game recommendations from IGDB
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        const recs = await getGameRecommendations(gameName);
+        setRecommendations(recs);
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        setErrorRecs("Failed to load recommendations.");
+      } finally {
+        setLoadingRecs(false);
+      }
+    };
+    fetchRecommendations();
   }, [gameName]);
 
   if (loading) {
@@ -82,6 +108,27 @@ export default function GameDetail() {
             </Text>
           </View>
         )}
+
+        {/* New Recommendations Section */}
+        <View style={styles.recommendationsContainer}>
+          <Text style={styles.recommendationsTitle}>Similar Games</Text>
+          {loadingRecs ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : errorRecs ? (
+            <Text style={styles.errorText}>{errorRecs}</Text>
+          ) : (
+            <FlatList
+              data={recommendations}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.recommendationItem}>
+                  <Text style={styles.recommendationName}>{item.name}</Text>
+                  {/* Optionally, add an Image component for item.cover.url */}
+                </View>
+              )}
+            />
+          )}
+        </View>
       </ScrollView>
 
       <View style={styles.goBackButtonContainer}>
@@ -132,6 +179,32 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 16,
     lineHeight: 22,
+  },
+  recommendationsContainer: {
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+  },
+  recommendationsTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 12,
+  },
+  recommendationItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  recommendationName: {
+    fontSize: 16,
+    color: "#333",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    textAlign: "center",
   },
   goBackButtonContainer: {
     paddingHorizontal: 20,

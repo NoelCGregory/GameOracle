@@ -29,7 +29,7 @@ const Recommendations: React.FC = () => {
 
   const fetchRecommendations = async () => {
     try {
-      const identifiedGameName = "Super Mario Bros";
+      const identifiedGameName = "Super Mario Bros.";
       const recommendations = await getGameRecommendations(identifiedGameName);
       setGames(recommendations);
     } catch (err) {
