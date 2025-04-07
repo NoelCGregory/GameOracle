@@ -30,7 +30,6 @@ export default function Login() {
 
   const handleSignIn = async ({ email, password }) => {
     try {
-      console.log(email, password);
       // Register the user
       const userCredential = await signInWithEmailAndPassword(
         auth,

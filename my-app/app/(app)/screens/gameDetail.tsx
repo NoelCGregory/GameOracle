@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import GemniHandler from "@/app/services/API/GemniHandler";
 import { getGameRecommendations } from "../../services/API/igdbApi";
+import RateID from "../idsuccess/rateid";
 
 export default function GameDetail() {
   const router = useRouter();
@@ -104,8 +105,9 @@ export default function GameDetail() {
 
             <Text style={styles.gameInfoTitle}>Genre:</Text>
             <Text style={styles.gameInfoText}>
-              {gameData["genre"] ? gameData["genre"].join(",") : ""}
+              {gameData["genre"] ? gameData["genre"] : ""}
             </Text>
+            <RateID></RateID>
           </View>
         )}
 
