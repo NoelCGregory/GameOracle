@@ -29,9 +29,7 @@ export class BlackBoard {
 
     console.log("----Expert ---");
     console.log(expertResults);
-    const filteredResults = expertResults.filter(
-      (result) => result != null || result.length > 0
-    );
+    const filteredResults = expertResults.filter((result) => result != null);
     console.log("----Ans---");
     console.log(filteredResults);
 

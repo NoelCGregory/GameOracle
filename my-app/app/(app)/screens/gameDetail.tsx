@@ -89,7 +89,9 @@ export default function GameDetail() {
     <View style={[styles.container, { paddingBottom: insets.bottom }]}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.gameNameContainer}>
-          <Text style={styles.gameName}>{gameData["game_name"]}</Text>
+          <Text style={styles.gameName}>
+            {gameData["game_name"] != null ? gameData["game_name"] : gameName}
+          </Text>
         </View>
 
         {gameData && (
