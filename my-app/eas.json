@@ -1,0 +1,35 @@
+{
+  "cli": {
+    "version": ">= 16.2.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_KEY": "AIzaSyBztsBhj3u65jmnREzUfcYo8oNVAO_7rME",
+        "EXPO_PUBLIC_AUTH_DOMAIN": "gameoracle-7d4d7.firebaseapp.com",
+        "EXPO_PUBLIC_PROJECT_ID": "gameoracle-7d4d7",
+        "EXPO_PUBLIC_STORAGE_BUCKET": "gameoracle-7d4d7.firebasestorage.app",
+        "EXPO_PUBLIC_MESSAGING_SENDER_ID": "126041712246",
+        "EXPO_PUBLIC_APP_ID": "1:126041712246:web:efd6126d7503464403a157",
+        "EXPO_PUBLIC_MEASUREMENT_ID": "G-DKVLNS06X3",
+        "EXPO_PUBLIC_GEMINI_API_KEY": "AIzaSyD8MohgO9U_JAvx552gDKGCC1iRI9aw_OQ"
+      },
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

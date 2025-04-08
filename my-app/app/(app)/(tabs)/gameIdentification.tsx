@@ -17,6 +17,8 @@ import { Timestamp, addDoc, collection } from "firebase/firestore";
 import { db } from "@/FirebaseConfig";
 import { useAuth } from "@/context/authContext";
 import Toast from "react-native-toast-message";
+import { ActivityIndicator, Modal } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 interface IdentificationRecord {
   image: string | null;
@@ -28,6 +30,7 @@ export default function GameIdentification() {
   const state = useNavigationState((state) => state);
   const router = useRouter();
   const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState("image");
   const [manager] = useState(new IdentificationManager());
@@ -90,13 +93,16 @@ export default function GameIdentification() {
   const aggregateResults = async () => {
     console.log(manager);
     try {
+      setLoading(true);
+
       const result = await manager.submitIdentification(identificationRecord);
-      if (result == null) throw DOMException("Error");
+      if (result == null || result.length <= 0) throw DOMException("Error");
       const docRef = await addDoc(collection(db, "identificationHistories"), {
         game: result,
         user: user?.uid,
         timestamp: Timestamp.now(),
       });
+      setLoading(false);
       router.push({
         pathname: "/screens/gameDetail",
         params: {
@@ -104,15 +110,40 @@ export default function GameIdentification() {
         },
       });
     } catch (e) {
+      setLoading(false);
+
       Toast.show({
         type: "error", // 'success' | 'error' | 'info'
-        text1: "Error",
+        text1: "Error Can't Detect Game",
       });
     }
   };
 
+  const getNumFilledInputs = () => {
+    let count = 0;
+    for (let key in identificationRecord) {
+      if (identificationRecord[key]) {
+        count++;
+      }
+    }
+    return count;
+  };
+
+  const resetIdentifcation = () => {
+    setIdentificationRecord({
+      image: null,
+      audio: null,
+      text: null,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      <Modal transparent={true} animationType="fade" visible={loading}>
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#1E90FF" />
+        </View>
+      </Modal>
       <Text style={styles.title}>Game Identification</Text>
       <View style={styles.mainContainer}>
         <ScrollView style={styles.contentContainer}>
@@ -157,6 +188,12 @@ export default function GameIdentification() {
                   Audio
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.resetButton}
+                onPress={resetIdentifcation}
+              >
+                <FontAwesome name="refresh" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             {activeTab === "image" && (
               <View style={styles.imageSection}>
@@ -175,13 +212,15 @@ export default function GameIdentification() {
             )}
           </View>
         </ScrollView>
+
         <View style={styles.submitButtonContainer}>
           <TouchableOpacity
             style={styles.submitButton}
             onPress={aggregateResults}
           >
             <Text style={styles.submitButtonText}>
-              Submit for Identification
+              Identity Game ({getNumFilledInputs()}{" "}
+              {getNumFilledInputs() === 1 ? "input" : "inputs"} filled )
             </Text>
           </TouchableOpacity>
         </View>
@@ -194,6 +233,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
+  },
+  loadingOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
   },
   mainContainer: {
     flex: 1,
@@ -268,6 +319,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#eee",
   },
+
   submitButton: {
     backgroundColor: "#32CD32",
     borderRadius: 12,
@@ -283,6 +335,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 3,
   },
+
+  resetButton: {
+    backgroundColor: "#FF3B30",
+    borderRadius: 10,
+    padding: 5,
+  },
+
   submitButtonText: {
     color: "#fff",
     fontSize: 16,

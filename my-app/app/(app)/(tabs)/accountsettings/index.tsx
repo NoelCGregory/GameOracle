@@ -39,11 +39,11 @@ export default function AccountSettings() {
         try {
           const q = query(
             collection(db, "identificationHistories"),
-            where("user", "==", user.uid) // Match documents where user.id equals current user's UID
+            where("user", "==", user.uid) 
           );
 
           const querySnapshot = await getDocs(q);
-          setIdentificationsCount(querySnapshot.size); // Count the matching documents
+          setIdentificationsCount(querySnapshot.size); 
         } catch (error) {
           console.error("Error fetching user data:", error);
         } finally {
@@ -55,7 +55,7 @@ export default function AccountSettings() {
     fetchUserData();
   }, [user]);
 
-  const handleUpdateDisplayName = async () => {
+  const handleDisplayName = async () => {
     if (!displayName.trim()) return;
 
     setUpdating(true);
@@ -118,7 +118,7 @@ export default function AccountSettings() {
                       <Text style={styles.editButtonText}>Cancel</Text>
                     </Pressable>
                     <Pressable
-                      onPress={handleUpdateDisplayName}
+                      onPress={handleDisplayName}
                       style={[styles.editButton, styles.saveButton]}
                       disabled={updating}
                     >

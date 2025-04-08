@@ -29,7 +29,7 @@ export default function TextInputer({ onCapture }: any) {
         onSubmitEditing={Keyboard.dismiss}
       />
       <TouchableOpacity style={styles.button} onPress={handleMatch}>
-        <Text style={styles.buttonText}>Submit</Text>
+        <Text style={styles.buttonText}>Add Text Input</Text>
       </TouchableOpacity>
     </View>
   );

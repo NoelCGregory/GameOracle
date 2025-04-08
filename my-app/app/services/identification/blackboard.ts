@@ -15,9 +15,6 @@ export class BlackBoard {
     console.log(identification);
     console.log(this.expertMap);
 
-    // let y = await t.getResult(identification["imageUri"]);
-    // console.log(y);
-
     let promises: any[] = [];
 
     for (const [key, expert] of this.expertMap.entries()) {
@@ -29,10 +26,13 @@ export class BlackBoard {
     }
 
     const expertResults = await Promise.all(promises);
+
+    console.log("----Expert ---");
+    console.log(expertResults);
     const filteredResults = expertResults.filter(
       (result) => result != null || result.length > 0
     );
-    console.log("-------");
+    console.log("----Ans---");
     console.log(filteredResults);
 
     // Aggregate
